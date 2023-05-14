@@ -7,19 +7,21 @@ from firebase_admin import credentials, firestore, storage
 import numpy as np
 import tempfile
 import dotenv
-
+from flask import Flask, request, jsonify
 dotenv.load_dotenv()
 
 
 # Initialize Firebase
-cred = credentials.Certificate('./firebase-service-account.json')
+cred = credentials.Certificate(json.loads(os.getenv("FIREBASE_SERVICE_ACCOUNT")))
 firebase_admin.initialize_app(cred, {
     'storageBucket': os.getenv("FIREBASE_STORAGE_BUCKET")
 })
 
+# Initialise the Flask app
+app = Flask(__name__)
+
 db = firestore.client()
 bucket = storage.bucket()
-
 def extract_faces(video_id):
     # Download the video from Firebase Storage
     print("Downloading file form firestore")
@@ -98,5 +100,19 @@ def extract_faces(video_id):
     })
 
 
+@app.route('/extract_faces', methods=['POST'])
+def extract_faces_endpoint():
+    try:
+        data = request.get_json()
+        video_id = data.get('video_id')
+        if video_id is None:
+            return jsonify({'error': 'Missing or invalid video_id'}), 400
 
-extract_faces("CrowPoint_-_Lie_-_4")
+        extract_faces(video_id)
+        return 'Faces extracted', 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
