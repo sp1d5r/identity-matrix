@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from ..services.video_processing_service import process_video
 
-bp = Blueprint('upload', __name__, url_prefix='/api/process')
+bp = Blueprint('process', __name__, url_prefix='/api')
 
-@bp.route('/api/process', methods=['POST'])
+@bp.route('/process/', methods=['POST'])
 def process():
     data = request.get_json()
     if 'video_filename' not in data or 'image_filename' not in data:
