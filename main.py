@@ -2,14 +2,19 @@ from flask import Flask, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, storage
 from werkzeug.utils import secure_filename
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Flask initialisation
 app = Flask(__name__)
 
 # Initialize Firebase
-cred = credentials.Certificate('path/to/serviceAccountKey.json')
+cred = credentials.Certificate('./firebase-service-account.json')
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'your-bucket-name.appspot.com'
+    'storageBucket': os.getenv("FIREBASE_STORAGE_BUCKET")
 })
 
 #

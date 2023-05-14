@@ -1,2 +1,4 @@
 .env
 .idea
+private-readme.md
+firebase-service-account.json
