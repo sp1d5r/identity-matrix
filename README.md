@@ -39,7 +39,10 @@ TBC
 
 ## Usage
 
-TBC
+There should be three main services provided here:
+1. Upload Video and Preprocess  
+2. ML - face extraction, face clustering (TBC), face swap (ROOP)
+3. Video recompliation
 
 ## API Documentation
 
