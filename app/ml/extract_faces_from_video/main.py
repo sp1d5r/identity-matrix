@@ -100,6 +100,22 @@ def extract_faces(video_id):
     })
 
 
+def vectorise_and_group_faces(video_id):
+    # Download the video from Firebase Storage
+    print("Downloading file form firestore")
+    video_blob = bucket.blob(f"videos/{video_id}.mp4")
+    video_path = tempfile.mktemp(suffix=".mp4")
+    video_blob.download_to_filename(video_path)
+    print("Downloaded file form firestore")
+
+    # Load the video
+    print("Load the file")
+    cap = cv2.VideoCapture(video_path)
+    print("Crop the faces by frames")
+
+
+    return
+
 @app.route('/extract_faces', methods=['POST'])
 def extract_faces_endpoint():
     try:

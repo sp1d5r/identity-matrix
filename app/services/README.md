@@ -2,6 +2,17 @@
 
 This directory contains service modules, which are responsible for executing the main logic of the application, such as interacting with external APIs, handling database operations, and running complex algorithms. Each service module should be focused on a specific domain of the application.
 
+## Job States:
+
+```python
+STARTED = "Video and Images have been uploaded"
+PREPROCESSING = "Extracting the frames out"
+FACE_SWAPPING = "Swapping faces"
+CREATING_VIDEO = "Combine frames back"
+FINISHED = "Complete"
+```
+
+
 ## Current Services
 
 firebase_service.py
