@@ -4,14 +4,25 @@ from insightface.app import FaceAnalysis
 from firebase_admin import storage
 import numpy as np
 import os
+import sys
 
-# Use Cloud GPU
+# Get the directory where the script is located
+script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+# Construct the path to the "Identity Matrix" folder
+identity_matrix_dir = os.path.abspath(os.path.join(script_dir, '..', '..'))
+
+# Change the working directory to the "Identity Matrix" folder
+os.chdir(identity_matrix_dir)
+
+# Now you can construct paths relative to the "Identity Matrix" folder
+model_path = os.path.join(os.getcwd(), 'app/assets/inswapper_128_fp16.onnx')
 
 
 # Initialize the model
 app = FaceAnalysis('buffalo_l')
 app.prepare(ctx_id=0, det_size=(640,640))
-swapping_model = insightface.model_zoo.get_model('/Users/elijahahmad/PycharmProjects/Identity Matrix/app/assets/inswapper_128_fp16.onnx', download=False, download_zip=False)
+swapping_model = insightface.model_zoo.get_model(model_path, download=False, download_zip=False)
 
 def swap_faces(video, frame_number, driving_image):
     # Define Firebase storage bucket
@@ -58,10 +69,10 @@ def swap_faces(video, frame_number, driving_image):
         _, swapped_img_encoded = cv2.imencode('.png', frame_copy)
 
         # Upload the swapped image back to Firebase
-        output_filename = 'output_image.png'
-        output_filepath = os.path.join(
-            "/Users/elijahahmad/PycharmProjects/Identity Matrix/app/ml/face_swapping_2/assets/output", output_filename)
-        cv2.imwrite(output_filepath, frame_copy)
+        # output_filename = 'output_image.png'
+        # output_filepath = os.path.join(
+        #     "/Users/elijahahmad/PycharmProjects/Identity Matrix/app/ml/face_swapping_2/assets/output", output_filename)
+        # cv2.imwrite(output_filepath, frame_copy)
 
         output_blob = bucket.blob(output_path)
         output_blob.upload_from_string(swapped_img_encoded.tobytes(), content_type='image/png')
